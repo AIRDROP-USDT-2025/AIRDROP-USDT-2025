@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AIRDROP USDT - VIP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #001f3f;
+      color: white;
+    }
+    header {
+      background-color: #002f6c;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .vip-card {
+      background-color: #003366;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      position: relative;
+    }
+    .vip-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #ffcc00;
+      color: black;
+      padding: 4px 10px;
+      font-weight: bold;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .vip-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .vip-content img {
+      width: 60px;
+      height: 60px;
+    }
+    .vip-details {
+      flex: 1;
+    }
+    .vip-details div {
+      margin: 4px 0;
+    }
+    .unlock-btn {
+      background-color: #ffcc00;
+      color: black;
+      font-weight: bold;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #003050;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 9999;
+      text-align: center;
+      max-width: 80%;
+    }
+    .popup button {
+      background-color: red;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .bottom-space {
+      height: 90px;
+    }
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #002244;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+    nav a {
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    nav i {
+      font-size: 20px;
+    }
+  </style>
+
+  <!-- ✅ Firebase Config Injected Below -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBzmksCs_D3wODtBjiL7LZyBWfPV71Kk34",
+      authDomain: "airdrop-usdt-2025.firebaseapp.com",
+      projectId: "airdrop-usdt-2025",
+      storageBucket: "airdrop-usdt-2025.firebasestorage.app",
+      messagingSenderId: "511690643803",
+      appId: "1:511690643803:web:eb5549017fe3e09222e27e",
+      measurementId: "G-5CBWQSLNG9"
+    };
+    initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <header>AIRDROP USDT - VIP</header>
+
+  <div id="vip-container"></div>
+
+  <div class="bottom-space"></div>
+
+  <nav>
+    <a href="dashboard.html"><i class="fas fa-home"></i><br>Home</a>
+    <a href="task.html"><i class="fas fa-tasks"></i><br>Task</a>
+    <a href="team.html"><i class="fas fa-users"></i><br>Team</a>
+    <a href="vip.html"><i class="fas fa-crown"></i><br>VIP</a>
+    <a href="profile.html"><i class="fas fa-user"></i><br>Me</a>
+  </nav>
+
+  <div id="popup" class="popup" style="display:none;">
+    <div id="popup-text"></div>
+    <button onclick="location.href='recharge.html'">Confirm</button>
+  </div>
+
+  <script>
+    const vipLevels = [
+      { level: 1, interest: 4, daily: 4, total: 480, cost: 12 },
+      { level: 2, interest: 12, daily: 12, total: 1440, cost: 36 },
+      { level: 3, interest: 36, daily: 36, total: 4320, cost: 108 },
+      { level: 4, interest: 106, daily: 106, total: 12720, cost: 322 },
+      { level: 5, interest: 322, daily: 322, total: 38640, cost: 973 },
+      { level: 6, interest: 1030, daily: 1030, total: 123600, cost: 2944 },
+      { level: 7, interest: 2345, daily: 2345, total: 281400, cost: 5855 },
+      { level: 8, interest: 5249, daily: 5249, total: 629880, cost: 11666 },
+      { level: 9, interest: 16888, daily: 16888, total: 2026560, cost: 33777 },
+      { level: 10, interest: 30738, daily: 30738, total: 3688560, cost: 55888 }
+    ];
+
+    const container = document.getElementById("vip-container");
+    const userBalance = parseFloat(localStorage.getItem("balance") || "0");
+    const unlocked = JSON.parse(localStorage.getItem("vipLevels") || "[]");
+
+    vipLevels.forEach(vip => {
+      const card = document.createElement("div");
+      card.className = "vip-card";
+
+      card.innerHTML = `
+        <div class="vip-label">VIP${vip.level}</div>
+        <div class="vip-content">
+          <img src="https://api.tkteam.cc/upload/img/686bfb8b78a0.webp" alt="VIP icon" />
+          <div class="vip-details">
+            <div><strong>Daily Tasks:</strong> 1</div>
+            <div><strong>Simple Interest:</strong> ${vip.interest.toFixed(2)}</div>
+            <div><strong>Daily Profit:</strong> ${vip.daily.toFixed(2)} USDT</div>
+            <div><strong>Total Profit:</strong> ${vip.total.toLocaleString()} USDT</div>
+            <button class="unlock-btn" onclick="unlockVIP(${vip.level}, ${vip.cost})">
+              ${vip.cost.toFixed(2)} USDT Unlock Now
+            </button>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    function unlockVIP(level, cost) {
+      if (userBalance >= cost) {
+        const current = JSON.parse(localStorage.getItem("vipLevels") || "[]");
+        if (!current.includes(level)) {
+          current.push(level);
+          localStorage.setItem("vipLevels", JSON.stringify(current));
+        }
+        alert("VIP Level Unlocked!");
+        location.reload();
+      } else {
+        const deficit = (cost - userBalance).toFixed(4);
+        document.getElementById("popup-text").textContent =
+          `The recharge balance is automatically unlocked\nNeed to recharge $${deficit}`;
+        document.getElementById("popup").style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
